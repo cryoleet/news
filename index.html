@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div ng-app="headlines">
+        <div ng-controller="display">
+            <select id="countrySelect" class="select2" ng-model="keyword" ng-change="fetchHead()">
+                <option ng-repeat="country in countries" value="{{ country.id }}">{{ country.name }}</option>
+            </select>
+        </div>
+    </div>
+</body>
+<script>
+var app = angular.module("headlines", []);
+
+app.controller("display", function($scope, $http) {
+
+    $(document).ready(function() {
+        $(".select2").select2();
+    });
+
+    $scope.countries = [
+        { id: 'ch', name: 'Switzerland' },
+        { id: 'cn', name: 'China' },
+        { id: 'co', name: 'Colombia' },
+        { id: 'cu', name: 'Cuba' },
+        { id: 'cz', name: 'Czech Republic' },
+        { id: 'de', name: 'Germany' },
+        { id: 'eg', name: 'Egypt' },
+        { id: 'fr', name: 'France' },
+        { id: 'gb', name: 'United Kingdom' },
+        { id: 'gr', name: 'Greece' },
+        { id: 'hk', name: 'Hong Kong' },
+        { id: 'hu', name: 'Hungary' },
+        { id: 'id', name: 'Indonesia' },
+        { id: 'ie', name: 'Ireland' },
+        { id: 'il', name: 'Israel' },
+        { id: 'in', name: 'India' },
+        { id: 'it', name: 'Italy' },
+        { id: 'jp', name: 'Japan' },
+        { id: 'kr', name: 'South Korea' },
+        { id: 'lt', name: 'Lithuania' },
+        { id: 'lv', name: 'Latvia' },
+        { id: 'ma', name: 'Morocco' },
+        { id: 'mx', name: 'Mexico' },
+        { id: 'my', name: 'Malaysia' },
+        { id: 'ng', name: 'Nigeria' },
+        { id: 'nl', name: 'Netherlands' },
+        { id: 'no', name: 'Norway' },
+        { id: 'nz', name: 'New Zealand' },
+        { id: 'ph', name: 'Philippines' },
+        { id: 'pl', name: 'Poland' },
+        { id: 'pt', name: 'Portugal' },
+        { id: 'ro', name: 'Romania' },
+        { id: 'rs', name: 'Serbia' },
+        { id: 'ru', name: 'Russia' },
+        { id: 'sa', name: 'Saudi Arabia' },
+        { id: 'se', name: 'Sweden' },
+        { id: 'sg', name: 'Singapore' },
+        { id: 'si', name: 'Slovenia' },
+        { id: 'sk', name: 'Slovakia' },
+        { id: 'th', name: 'Thailand' },
+        { id: 'tr', name: 'Turkey' },
+        { id: 'tw', name: 'Taiwan' },
+        { id: 'ua', name: 'Ukraine' },
+        { id: 'us', name: 'United States' },
+        { id: 've', name: 'Venezuela' },
+        { id: 'za', name: 'South Africa' }
+    ];
+
+    $("#countrySelect").select2({
+        data: $scope.countries.map(function(country) {
+            return country
+        })
+    });
+
+    $scope.fetchHead = function() {
+        $http.get('https://newsapi.org/v2/top-headlines?country='+ $scope.keyword +'&apiKey=84e9019ac272472cab269d40cae1b6f4')
+        .then(function(response) {
+            // Handle successful response
+            $scope.data = response.data;
+            console.log(response.data)
+        })
+        .catch(function(error) {
+            // Handle error
+            console.error('Error fetching data:', error);
+        });
+    }
+
+});
+</script>
+</html>
