@@ -1,9 +1,23 @@
-.form-check-input {
-    transform: scale(2);
+
+
+@media (max-width: 768px) {
+    .form-check-input {
+        transform: scale(1.5);
+    }
+    
+    .form-check-label {
+        transform: scale(1.2);
+    }
 }
 
-.form-check-label {
-    transform: scale(1.5);
+@media (min-width: 768px) {
+    .form-check-input {
+        transform: scale(2);
+    }
+    
+    .form-check-label {
+        transform: scale(1.4);
+    }
 }
 
 #countrySelect {
