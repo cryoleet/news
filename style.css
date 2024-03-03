@@ -1,0 +1,11 @@
+.form-check-input {
+    transform: scale(2);
+}
+
+.form-check-label {
+    transform: scale(1.5);
+}
+
+#countrySelect {
+    max-width: 400px;
+}
