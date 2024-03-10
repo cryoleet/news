@@ -3,9 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>  
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
-    
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+        <div class="container-fluid">
+        <div class="navbar-nav d-flex flex-row justify-content-around w-100">
+            <a class="nav-link fs-3" href="headlines.html">Headlines</a>
+            <a class="nav-link active fs-3" href="search.html">Search</a>
+        </div>
+        </div>
+    </nav>
+    <main class="container mt-3">
+        <div ng-app="search" ng-controller="find">
+            <div class="d-flex flex-column m-auto" id="searchInputGroup">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="keywordInput" placeholder="Apple" ng-model="keyword">
+                    <label for="keywordInput">Keyword</label>
+                </div>
+                <!-- the dates -->
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <label for="fromInput" class="form-label date-label">From</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" class="form-control form-control-lg" id="fromInput" ng-model="fromDate">
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <label for="toInput" class="form-label date-label">To</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" class="form-control form-control-lg" id="toInput" ng-model="toDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-floating">
+                    <select class="form-select form-select-lg" id="sortSelect" aria-label="Floating label select" ng-model="sortby">
+                        <option value="relevancy">relevancy</option>
+                        <option value="popularity">popularity</option>
+                        <option value="publishedAt">published date</option>
+                    </select>
+                    <label for="floatingSelect">Sort By</label>
+                </div>
+                <button id="search-btn" class="btn btn-lg btn-dark mt-3 align-self-center" ng-click="go()">GO</button>
+            </div>
+            <hr>
+            
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-3 mb-3" ng-repeat="article in articles">
+                    <div class="card h-100">
+                        <img src="{{ article.urlToImage }}" class="card-img-top" alt="">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h5 class="card-title">{{ article.title }}</h5>
+                            <p class="card-text">{{ article.description }}</p>
+                            <a href="{{ article.url }}" target="_blank" class="btn btn-dark w-auto align-self-end">Visit source</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </main>
+        
+
 </body>
+<script src="script.js"></script>
+<script>
+
+    var app = angular.module("search", []);
+
+    app.controller("find", function($scope, $http) {
+
+        $scope.articles = [];
+
+        $scope.go = function() {
+
+            let keyword = $scope.keyword;
+            let from = $scope.fromDate.toISOString().split('T')[0];
+            let to = $scope.toDate.toISOString().split('T')[0];
+            let sort = $scope.sortby;
+
+            var url = `https://newsapi.org/v2/everything?q=${keyword}&from=${from}&to=${to}&sortBy=${sort}&apiKey=84e9019ac272472cab269d40cae1b6f4`;
+            console.log("API URL:", url); // Debug statement to check the API URL
+            $http.get(url)
+            .then(function(response) {
+                $scope.articles = response.data.articles;
+                console.log($scope.articles);
+            })
+            .catch(function(error) {
+                // Handle error
+                console.error('Error fetching data:', error);
+            });
+
+        }
+
+
+    });
+    
+    
+</script>
 </html>
