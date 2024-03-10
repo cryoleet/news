@@ -20,19 +20,20 @@
     </nav>
     <main class="container mt-3">
         <div ng-app="search" ng-controller="find">
-            <div class="d-flex flex-column m-auto" id="searchInputGroup">
+            <form class="d-flex flex-column m-auto" id="searchInputGroup" novalidate name="searchForm" ng-submit="go()">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="keywordInput" placeholder="Apple" ng-model="keyword" required>
+                    <input type="text" name="keyword" class="form-control" id="keywordInput" placeholder="Apple" ng-model="keyword" required>
                     <label for="keywordInput">Keyword</label>
+                    <span class="error" ng-show="searchForm.keyword.$dirty && searchForm.keyword.$invalid">This field is required</span>
                 </div>
                 <!-- the dates -->
-                <div class="d-flex justify-content-between mb-3">
+                <div class="d-flex justify-content-between">
                     <div class="row align-items-center">
                         <div class="col-auto">
                             <label for="fromInput" class="form-label date-label">From</label>
                         </div>
                         <div class="col-auto">
-                            <input type="date" class="form-control form-control-lg" id="fromInput" ng-model="fromDate">
+                            <input type="date" class="form-control form-control-lg" id="fromInput" name="fromDate" ng-model="fromDate">
                         </div>
                     </div>
                     <div class="row align-items-center">
@@ -40,20 +41,21 @@
                             <label for="toInput" class="form-label date-label">To</label>
                         </div>
                         <div class="col-auto">
-                            <input type="date" class="form-control form-control-lg" id="toInput" ng-model="toDate">
+                            <input type="date" class="form-control form-control-lg" id="toInput" name="toDate" ng-model="toDate">
                         </div>
                     </div>
                 </div>
-                <div class="form-floating">
+                <span class="error" ng-show="searchForm.toDate.$error.beforeDate">To Date must be after From Date.</span>   
+                <div class="form-floating mt-3">
                     <select class="form-select form-select-lg" id="sortSelect" aria-label="Floating label select" ng-model="sortby">
-                        <option value="relevancy">relevancy</option>
+                        <option value="relevancy" selected>relevancy</option>
                         <option value="popularity">popularity</option>
                         <option value="publishedAt">published date</option>
                     </select>
                     <label for="floatingSelect">Sort By</label>
                 </div>
-                <button id="search-btn" class="btn btn-lg btn-dark mt-3 align-self-center" ng-click="go()">GO</button>
-            </div>
+                <button type="submit" ng-disabled="searchForm.$invalid" id="search-btn" class="btn btn-lg btn-dark mt-3 align-self-center">GO</button>
+            </form>
             <hr>
             
             <div class="row">
